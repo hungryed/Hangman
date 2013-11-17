@@ -5,15 +5,7 @@ class Hangman
     File.read('list_of_words.rb').each_line do |word|
       @mystery_words << word
     end
-    @incorrect = 0
-    @word = @mystery_words.sample
-    @length_of_word = @word.length
-    @display_word = []
-    @length_of_word.times do 
-      @display_word << "_"
-    end
-    @guessed_letters = []
-    display
+    reset
   end
 
   def user_guessed_letter(letter, letter_index=0)
@@ -34,20 +26,30 @@ class Hangman
       @incorrect += 1
     end
     @guessed_letters << letter
-    display_human
-    game_over?
-    display
+  end
 
+  def reset
+    @incorrect = 0
+    @word = @mystery_words.sample
+    @length_of_word = @word.length
+    @display_word = []
+    @length_of_word.times do 
+      @display_word << "_"
+    end
+    @guessed_letters = []
   end
 
   def game_over?
     if @incorrect >= 8
+      display_human
       puts "You failed. The word was #{@word}"
-      play_again?
+      return false
     elsif @display_word.join("") == @word
+      display_human
       puts "You win!!"
-      play_again?
+      return false
     end
+    return true
   end
 
   def display
@@ -55,35 +57,19 @@ class Hangman
     puts "You have #{8 - @incorrect} chances remaining"
     puts "Your previous guesses are " << @guessed_letters.join(",")
     print "Guess a letter: "
-    user_guess = gets.chomp
-    exit if user_guess == "exit"
-    user_guessed_letter(user_guess)
   end
 
   def play_again?
     puts "Would you like to play again? (yes/no)"
     user_decision = gets.chomp
     if user_decision.include?("yes")
-      initialize
-    elsif user_decision.include?("no")
-      exit
+      game_play
     else
       puts "exiting..."
       exit
     end
   end
 
-
-  def play
-    puts "Welcome to Hangman. Would you like to start a new game? (yes/no)"
-    if user_decision.include?("yes")
-      initialize
-    elsif user_decision.include?("no")
-      exit
-    else
-      puts "Please type yes or no"
-    end
-  end 
 
   def display_human
     left_eye = @incorrect >= 7
@@ -105,10 +91,23 @@ class Hangman
     puts " -----------"
   end
 
+  def game_play
+    reset
+    while game_over?
+      display_human
+      display
+      user_guess = gets.chomp
+      exit if user_guess == "exit"
+      user_guessed_letter(user_guess)
+
+    end
+    play_again?
+  end
+
 
 
 
 end
 
 player = Hangman.new
-player.play
+player.game_play
