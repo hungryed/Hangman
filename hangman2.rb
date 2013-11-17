@@ -17,40 +17,64 @@ class Hangman
   end
 
   def user_guessed_letter(letter, letter_index=0)
-    if @word.include?(letter) == false
+    if @guessed_letters.include?(letter)
+      puts "You already guessed that letter"
+    elsif letter.length > 1
+      if letter == @word
+        @display_word = letter.split("")
+      else
+        @incorrect = 8
+      end
+    elsif @word.include?(letter) && @word.index(letter, letter_index) != nil
+        guessed_letter_index = @word.index(letter, letter_index)
+        @display_word[guessed_letter_index] = letter
+        guessed_letter_index += 1
+        user_guessed_letter(letter, guessed_letter_index)
+    elsif @word.include?(letter) == false
       @incorrect += 1
-      @guessed_letters << letter
-      display
-    elsif @word.include?(letter) && @word.index(letter, letter_index) == nil
-      @guessed_letters << letter
-      display
-    else     
-      guessed_letter_index = @word.index(letter)
-      @display_word[guessed_letter_index] = letter
-      user_guessed_letter(letter, guessed_letter_index)
     end
+    @guessed_letters << letter
+    game_over?
+    display
 
+  end
+
+  def game_over?
+    if @incorrect >= 8
+      puts "You failed. The word was #{@word}"
+      play_again?
+    elsif @display_word.join("") == @word
+      puts "You win!!"
+      play_again?
+    end
   end
 
   def display
-    if @incorrect >= 8
-      puts "You failed. The word was #{@word}"
-    elsif @display_word.join("") == @word
-      puts "You win!!"
+    puts "Word: #{@display_word.join("")}"
+    puts "You have #{8 - @incorrect} chances remaining"
+    puts "Your previous guesses are " << @guessed_letters.join(",")
+    print "Guess a letter: "
+    user_guess = gets.chomp
+    exit if user_guess == "exit"
+    user_guessed_letter(user_guess)
+  end
+
+  def play_again?
+    puts "Would you like to play again? (yes/no)"
+    user_decision = gets.chomp
+    if user_decision.include?("yes")
+      initialize
+    elsif user_decision.include?("no")
+      exit
     else
-      puts "Word: #{@display_word.join("")}"
-      puts "You have #{8 - @incorrect} chances remaining"
-      puts "Your previous guesses are " << @guessed_letters.join(",")
-      print "Guess a letter: "
-      user_guess = gets.chomp
-      exit if user_guess == "exit"
-      user_guessed_letter(user_guess)
+      puts "exiting..."
+      exit
     end
   end
 
+
   def play
     puts "Welcome to Hangman. Would you like to start a new game? (yes/no)"
-    user_decision = gets.chomp
     if user_decision.include?("yes")
       initialize
     elsif user_decision.include?("no")
