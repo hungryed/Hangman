@@ -3,9 +3,9 @@ class Hangman
   def initialize
     @mystery_words = []
     File.read('list_of_words.rb').each_line do |word|
-      @mystery_words << word
+      @mystery_words << word.downcase
     end
-    reset
+    game_play
   end
 
   def user_guessed_letter(letter, letter_index=0)
@@ -92,14 +92,14 @@ class Hangman
   end
 
   def game_play
+    puts "Welcome to Hangman."
     reset
     while game_over?
       display_human
       display
-      user_guess = gets.chomp
+      user_guess = gets.chomp.downcase
       exit if user_guess == "exit"
       user_guessed_letter(user_guess)
-
     end
     play_again?
   end
