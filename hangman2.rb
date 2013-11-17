@@ -6,7 +6,7 @@ class Hangman
       @mystery_words << word
     end
     @incorrect = 0
-    @word = @mystery_words[rand(@mystery_words.length)]
+    @word = @mystery_words.sample
     @length_of_word = @word.length
     @display_word = []
     @length_of_word.times do 
@@ -84,18 +84,6 @@ class Hangman
       puts "Please type yes or no"
     end
   end 
-
-  def coloring(part, color)
-    part.colorize(:background => color.to_sym)
-  end
-
-  def scaffold_stand
-    if @incorrect >=1
-      puts " "
-    else
-      puts "|".colorize(:background => :brown)
-    end
-  end
 
   def display_human
     left_eye = @incorrect >= 7
