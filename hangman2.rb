@@ -34,6 +34,7 @@ class Hangman
       @incorrect += 1
     end
     @guessed_letters << letter
+    display_human
     game_over?
     display
 
@@ -83,6 +84,39 @@ class Hangman
       puts "Please type yes or no"
     end
   end 
+
+  def coloring(part, color)
+    part.colorize(:background => color.to_sym)
+  end
+
+  def scaffold_stand
+    if @incorrect >=1
+      puts " "
+    else
+      puts "|".colorize(:background => :brown)
+    end
+  end
+
+  def display_human
+    left_eye = @incorrect >= 7
+    right_eye = @incorrect >= 8
+    head = @incorrect >= 1
+    torso = @incorrect >= 2
+    left_arm = @incorrect >= 3
+    right_arm = @incorrect >= 4
+    left_leg = @incorrect >= 5
+    right_leg = @incorrect >= 6
+
+    puts "    -----"
+    puts "    |   |"
+    puts "    | #{head ? "|" : " "}#{left_eye ? "x" : " "}#{head ? "_" : " "}#{right_eye ? "x" : " "}#{head ? "|" : " "}"
+    puts "    |#{left_arm ? " --" : "   "}#{torso ? "|" : " "}#{right_arm ? "--" : " "}"
+    puts "    |   #{torso ? "|" : ""}"
+    puts "    | #{left_leg  ? " /": ""} #{right_leg ? '\ ': ""}"
+    puts "    | "
+    puts " -----------"
+  end
+
 
 
 
