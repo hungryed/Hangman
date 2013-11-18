@@ -1,10 +1,13 @@
+#!/usr/bin/env ruby
+
 class Hangman
 
+
   def initialize
-    @mystery_words = []
-    File.read('list_of_words.rb').each_line do |word|
-      @mystery_words << word.downcase
-    end
+    @mystery_words = ["array", "towel"]
+    #File.read('list_of_words.rb').each_line do |word|
+     # @mystery_words << word.downcase
+    #end
     game_play
   end
 
