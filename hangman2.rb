@@ -4,10 +4,10 @@ class Hangman
 
 
   def initialize
-    @mystery_words = ["array", "towel"]
-    #File.read('list_of_words.rb').each_line do |word|
-     # @mystery_words << word.downcase
-    #end
+    @mystery_words = []
+    File.open('list_of_words.txt').each do |word|
+      @mystery_words << word.chomp.downcase
+    end
     game_play
   end
 
@@ -28,7 +28,7 @@ class Hangman
     elsif @word.include?(letter) == false
       @incorrect += 1
     end
-    @guessed_letters << letter
+
   end
 
   def reset
@@ -36,7 +36,7 @@ class Hangman
     @word = @mystery_words.sample
     @length_of_word = @word.length
     @display_word = []
-    @length_of_word.times do 
+    @length_of_word.times do
       @display_word << "_"
     end
     @guessed_letters = []
@@ -103,6 +103,7 @@ class Hangman
       user_guess = gets.chomp.downcase
       exit if user_guess == "exit"
       user_guessed_letter(user_guess)
+      @guessed_letters << user_guess
     end
     play_again?
   end
